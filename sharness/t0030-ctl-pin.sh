@@ -6,7 +6,10 @@ test_description="Test cluster-ctl's pinning and unpinning functionality"
 . lib/test-lib.sh
 
 test_ipfs_init
+cleanup test_clean_ipfs
 test_cluster_init
+cleanup test_clean_cluster
+
 
 test_expect_success IPFS,CLUSTER "pin data to cluster with ctl" '
     cid=$(echo "test" | ipfs add -q) &&
@@ -22,6 +25,4 @@ test_expect_success IPFS,CLUSTER "unpin data from cluster with ctl" '
     ipfs-cluster-ctl status "$cid" | grep -q -i "UNPINNED"
 '
 
-cleanup test_clean_cluster
-cleanup test_clean_ipfs
 test_done

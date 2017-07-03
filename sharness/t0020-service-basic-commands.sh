@@ -5,7 +5,9 @@ test_description="Test service startup and init functionality"
 . lib/test-lib.sh
 
 test_ipfs_init
+cleanup test_clean_ipfs
 test_cluster_init
+cleanup test_clean_cluster
 
 test_expect_success "prerequisites" '
     test_have_prereq IPFS &&
@@ -28,6 +30,4 @@ test_expect_success "cluster-service --version succeeds and matches ctl" '
     [ "${sv[2]}" = "${cv[2]}" ]
 '
 
-cleanup test_clean_cluster
-cleanup test_clean_ipfs
 test_done

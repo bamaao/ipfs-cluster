@@ -1,13 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 # Run tests
 cd "$(dirname "$0")"
-exit_codes=()
-for i in t*.sh;
+status=0
+for i in t0*.sh;
 do
     echo "*** $i ***"
     ./$i
-    exit_codes+=($?)
+    status=$((status + $?))
 done
 
 # Aggregate Results
@@ -16,9 +16,10 @@ for f in test-results/*.counts; do
     echo "$f";
 done | bash lib/sharness/aggregate-results.sh
 
-# If any test fails error on exit
-for exit_code in "${exit_codes[@]}"; do
-    if [[ $exit_code != 0 ]]; then
-        exit 1
-    fi
-done
+# Cleanup results
+rm -rf test-results
+
+# Exit with error if any test has failed
+if [ $status -gt 0 ]; then
+    exit 1
+fi
